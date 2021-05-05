@@ -6,7 +6,8 @@ from os import path,remove
 
 def parseCommand(content:str):
     content = content.strip()
-    command = content[:content.find("(")].lower()
+    command = content[:content.find("(")]
+    command = command.lower()
     args = []
     value = ""
     if content.find("(") == -1 or content.find(")") == -1:
@@ -55,12 +56,25 @@ async def sayhelp(chan, isAdmin:bool = False):
         em.add_field(name = ":exclamation:test_Verify()\\n<Code in C/C++>",value = "ทดสอบว่า Grader แมวๆยังใช้ได้ไหม",inline=False)
         em.add_field(name = ":exclamation:check_Verify()",value = "ดูว่ามีใครมา Verify ไหม",inline=False)
         em.add_field(name = ":exclamation:Watch_Code_Verify(<id>)",value = "ดู Code ของ <id>",inline=False)
-        em.add_field(name = ":exclamation:test_Verify_Delete()",value = "ลบ Code ของตัวเอง",inline=False)
         em.add_field(name = ":exclamation:Force_Reload()",value = "บังคับให้รีโหลดฐานข้อมูลใหม่",inline=False)
         em.add_field(name = ":sleeping_accommodation:shutdown()",value = "ชื่อก็บอกอยู่แล้ว",inline=False)
         em.add_field(name = ":checkered_flag:Score_Board(<id>)",value = "ไว้ใช้ดูคะแนนในคอนเทส <id>",inline=False)
         em.add_field(name = ":checkered_flag:Send_Score_Board(<id>, <channel_id>)",value = "ไวส่งคะแนนใน <channel_id> ของคอนเทส <id>",inline=False)
         await chan.send(content = None ,embed = em)
+
+async def getNameFromId(client, mes, idPer:int):
+    cliUser = await client.fetch_user(idPer)
+    try:
+        guid = mes.guild
+    except:
+        if cliUser == None:
+            return f"(หาชื่อไม่เจอ ดิสคอร์ดมันโง่!!!!)"
+        return cliUser.display_name
+    if guid.get_member(idPer) == None:
+        if cliUser == None:
+            return f"(หาชื่อไม่เจอ ดิสคอร์ดมันโง่!!!!)"
+        return cliUser.display_name
+    return guid.get_member(idPer).display_name
 
 async def test(client):
     await client.get_channel(ENUM.DEBUG_CHANNEL).send("ยังมีชีวิตยุ้ว")

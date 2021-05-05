@@ -1,7 +1,7 @@
 import discord,random
 
 from discord import utils
-import ENUM,dataBASS
+import ENUM,dataBASS,Verify
 import BigDisCommand as cmd
 from util import *
 import GuessNumberGame as GNG
@@ -72,36 +72,36 @@ async def on_message(mes):
     isAdmin = False
     if hasattr(mes.author, 'roles'):
         for r in mes.author.roles:
-            if str(r) == "Adminstator":
+            if str(r) == "Administrator":
                 isAdmin = True
 
     isAdminChan = False
     if hasattr(mes.channel, 'changed_roles'):
         for r in mes.channel.changed_roles:
-            if str(r) == "Adminstator":
+            if str(r) == "Administrator":
                 isAdminChan = True
 
     isAdmin = isAdmin and isAdminChan
 
 
     #List command goes here
-    if thisCmd["command"].startswith(DEB + "test"):
+    if thisCmd["command"]==(DEB + "test"):
         await cmd.test(client)
     
-    if thisCmd["command"].startswith(DEB + "help"):
+    if thisCmd["command"]==(DEB + "help"):
         await cmd.sayhelp(mes.channel, isAdmin)
     
-    if thisCmd["command"].startswith(DEB + "change_log"):
+    if thisCmd["command"]==(DEB + "change_log"):
         await cmd.sayCLog(mes.channel)
     
-    if thisCmd["command"].startswith(DEB + "tasks") or thisCmd["command"].startswith(DEB + "problems"):
+    if thisCmd["command"]==(DEB + "tasks") or thisCmd["command"]==(DEB + "problems"):
         await cmd.sayNProblems(mes)
 
-    if thisCmd["command"].startswith(DEB + "ranking"):
+    if thisCmd["command"]==(DEB + "ranking"):
         await cmd.sayRanking(mes)
     
 
-    if thisCmd["command"].startswith(DEB + "otogradio"):
+    if thisCmd["command"]==(DEB + "otogradio"):
         if len(thisCmd["args"]) < 1:
             await cmd.sayThatChanel(mes,"ไม่ใส่ชื่อเพลง ก็ไม่เปิดให้!!!")
         else:
@@ -110,14 +110,14 @@ async def on_message(mes):
             await cmd.sayThatChanel(mes,f"||ล้อเล่น ไม่มีหรอก||")
     
 
-    if thisCmd["command"].startswith(DEB + "hello"):
+    if thisCmd["command"]==(DEB + "hello"):
         thisHello = ENUM.HELLO_TEXT[random.randint(0,len(ENUM.HELLO_TEXT) - 1)]
         await cmd.sayThatChanel(mes,f"{thisHello} @author")
     
-    if thisCmd["command"].startswith(DEB + "baka"):
+    if thisCmd["command"]==(DEB + "baka"):
         await cmd.sayThatChanel(mes,"<:baka:704310333120053248>")
     
-    if thisCmd["command"].startswith(DEB + "guess_num"):
+    if thisCmd["command"]==(DEB + "guess_num"):
         idPer = mes.author.id
         if GNG.remain(idPer) == -1:
             await cmd.sayThatChanel(mes,":crossed_swords:โห๋ 1-1 ได้ครับเจ้า @author:crossed_swords:")
@@ -127,7 +127,7 @@ async def on_message(mes):
         else:
             await cmd.sayThatChanel(mes,"เห้ย อย่าเล่นซ้ำเซ่!!!!??\nเวลาจะทายให้พิมพ์ `guess(ตัวเลข)` เอา!!! @author")
     
-    if thisCmd["command"].startswith(DEB + "guess") and not thisCmd["command"].startswith(DEB + "guess_num"):
+    if thisCmd["command"]==(DEB + "guess") and not thisCmd["command"]==(DEB + "guess_num"):
         idPer = mes.author.id
         
         if GNG.remain(idPer) != -1:
@@ -152,16 +152,16 @@ async def on_message(mes):
 
     if isAdmin:
         
-        if thisCmd["command"].startswith(DEB + "version"):
+        if thisCmd["command"]==(DEB + "version"):
             await cmd.sayThatChanel(mes,f"{ENUM.VER} เด้อออ")
         
-        if thisCmd["command"].startswith(DEB + "ann"):
+        if thisCmd["command"]==(DEB + "ann"):
             if thisCmd["value"].strip() == "":
                 await cmd.sayThatChanel(mes,"ประกาศความว่างเปล่า?")
             else:
                 await cmd.sayAnn(mes, client, thisCmd["value"].strip())
         
-        if thisCmd["command"].startswith(DEB + "say"):
+        if thisCmd["command"]==(DEB + "say"):
             if len(thisCmd["args"]) < 1:
                 await cmd.sayThatChanel(mes,"ประกาศในห้องไหนอ่ะะะ")
             elif thisCmd["value"].strip() == "":
@@ -171,7 +171,7 @@ async def on_message(mes):
             else:
                 await cmd.sayAnn(mes, client, thisCmd["value"].strip(), int(thisCmd["args"][0]))
         
-        if thisCmd["command"].startswith(DEB + "read"):
+        if thisCmd["command"]==(DEB + "read"):
             if thisCmd["value"].strip() == "":
                 await cmd.sayThatChanel(mes,"ให้อ่านความว่างเปล่า")
             else:
@@ -179,13 +179,13 @@ async def on_message(mes):
                 print(thisCmd["value"].strip())
                 await cmd.sayThatChanel(mes,"อ่านสำเร็จ!!")
         
-        if thisCmd["command"].startswith(DEB + "shutdown"):
+        if thisCmd["command"]==(DEB + "shutdown"):
             await cmd.sayThatChanel(mes,"ลาก่อย")
             await client.close()
             exit(0)
         
 
-        if thisCmd["command"].startswith(DEB + "score_board"):
+        if thisCmd["command"]==(DEB + "score_board"):
             if len(thisCmd["args"]) < 1:
                 await cmd.sayThatChanel(mes,"CONTEST ไหนนน")
             elif not isInt(thisCmd["args"][0]):
@@ -193,7 +193,7 @@ async def on_message(mes):
             else:
                 await cmd.sayContestRanking(int(thisCmd["args"][0]), mes.channel)
         
-        if thisCmd["command"].startswith(DEB + "send_score_board"):
+        if thisCmd["command"]==(DEB + "send_score_board"):
             if len(thisCmd["args"]) < 2:
                 await cmd.sayThatChanel(mes,"ดู Argument ดีๆ")
             elif not isInt(thisCmd["args"][0]):
@@ -202,6 +202,89 @@ async def on_message(mes):
                 await cmd.sayThatChanel(mes,"channel_id ควรเป็น int นะะ")
             else:
                 await cmd.sayContestRanking(int(thisCmd["args"][0]), client.get_channel(int(thisCmd["args"][1])))
+
+        if thisCmd["command"]==(DEB + "test_verify"):
+            code = thisCmd["value"].strip()
+            if code == "":
+                await cmd.sayThatChanel(mes,"ส่งความว่างเปล่ามาตรวจ?? เยี่ยมไปเล้ยยย")
+            else:
+                await cmd.sayThatChanel(mes,"ตรวจแป๊ป")
+                await cmd.sayThatChanel(mes,Verify.doJudge(code)[0])
+
+
+        if thisCmd["command"]==(DEB + "check_verify"):
+            if len(dataBASS.verify) == 0:
+                await cmd.sayThatChanel(mes,"เย่... ยังไม่มีใครมา Verify เลย\n*เ ห ง า จุ ง*")
+            else:
+                strr = f"ตอนนี้มี `{len(dataBASS.verify)}` คนที่กำลังอยู่ในระหว่างการดำเนินการ Verify...\n"
+                for ids in dataBASS.verify:
+                    strr += f"-{await cmd.getNameFromId(client, mes, int(ids))}({ids}) เหลืออีก {5 - len(dataBASS.verify[ids])} ครั้ง\n"
+                strr += f"\nรายงาน ณ {getNowTimeInThai()}"
+                
+                await cmd.sayThatChanel(mes,strr)
+        
+        if thisCmd["command"]==(DEB + "watch_code_verify"):
+            if len(thisCmd["args"]) < 1:
+                await cmd.sayThatChanel(mes,"ค ว า ม ว่ า ง เ ป ล่ า")
+            elif not isInt(thisCmd["args"][0]):
+                await cmd.sayThatChanel(mes,"ID ควรเป็นจำนวนเต็มนะะนะนะนะนะนะ")
+            elif Verify.getLenCodes(int(thisCmd["args"][0])) == 0:
+                await cmd.sayThatChanel(mes,"ไม่มีข้อมูลการ Verify ของ ID นี้นะ")
+            else:
+                idPer = int(thisCmd['args'][0])
+                strr = f"======ข้อมูล Verify ของ {await cmd.getNameFromId(client, mes, idPer)}======\n\n"
+                for i in range(len(dataBASS.verify[str(idPer)])):
+                    strr += f"การส่งครั้งที่ {i+1}...\n```cpp\n{dataBASS.verify[str(idPer)][i]}\n```\n\n"
+                
+                strr += f"\nรายงาน ณ {getNowTimeInThai()}"
+            
+            await cmd.sayThatChanel(mes,strr)
+                
+    #PART Verify
+    if thisCmd["command"]==(DEB + "verify"):
+        
+        correctedRole = False
+        if hasattr(mes.author, 'roles'):
+            for r in mes.author.roles:
+                correctedRole = correctedRole or (str(r) == "return 0;")
+        else:
+            return
+
+        if not correctedRole:
+            await mes.delete()
+            return
+        
+        code = thisCmd["value"].strip()
+        idPer = mes.author.id
+        if code == "":
+            await mes.author.send("ฮัลโล่ว เอ็งส่งโค้ดว่างเปล่ามาอ่ะ ตรวจไม่ได้เว้ยยย")
+            await mes.delete()
+            return
+
+        if Verify.getLenCodes(idPer) == 5:
+            await mes.author.send(ENUM.VERIF_NOPE)
+            await mes.delete()
+            return
+
+        Verify.addCode(idPer, code)
+        result = Verify.doJudge(code)
+
+        if result[1]:#pass
+            newRole = discord.utils.get(mes.guild.roles,name = "OTOGer")
+            await mes.author.send(f"```cpp\n{code}```\n")
+            await mes.author.send(result[0])
+            await mes.author.edit(roles = [newRole]) #TODO:Don't for get!
+            await mes.delete()
+            Verify.removeId(idPer)
+        else:
+            await mes.author.send(f"```cpp\n{code}```\n")
+            await mes.author.send(result[0])
+            remain = 5 - Verify.getLenCodes(idPer)
+            if remain == 0:
+                await mes.author.send(ENUM.VERIF_END)
+            else:
+                await mes.author.send(ENUM.VERIF_REMAIN%(remain))
+            await mes.delete()
 
 
 def main(token:int, isTest:bool = False):
