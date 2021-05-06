@@ -18,7 +18,7 @@ def main():
         print("You can create file name '__TOKEN__.txt'\nand save with your *token*\nIn next you don't need to tell me your token :)")
 
 
-    BigDiscord.main(thisToken, True)
+    BigDiscord.main(thisToken, path.exists(path.join(ENUM.PATH,"Islami")))
 
 
 main()
