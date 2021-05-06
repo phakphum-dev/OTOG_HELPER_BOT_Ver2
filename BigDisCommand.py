@@ -1,8 +1,10 @@
 from discord.colour import Color
-import ENUM,OTOG_API,util
-from discord import Embed, Colour, File
+import ENUM,OTOG_API,util,dataBASS, ContestManager
+from discord import Embed, Colour, File, Activity, Status, ActivityType, Game
 from os import path,remove
+import asyncio, time
 
+defaultName = "OTOG - One Tambon One Grader"
 
 def parseCommand(content:str):
     content = content.strip()
@@ -24,13 +26,77 @@ def parseCommand(content:str):
 
     return {"command" : command, "args":args, "value":value}
 
+
+async def botStatus(client):
+    timeTick = 0
+    userLife = -1
+    while True:
+        TIMF = ENUM.TIME_F_NORMAL
+
+        if ContestManager.isDuringContest():
+            TIMF = ENUM.TIME_F_CONTEST
+
+        if timeTick >= TIMF:
+            #Reloading API stuff goes here
+            timeTick %= TIMF
+            if not util.isSleepTime():
+                ContestManager.reloading()
+                userLife = OTOG_API.getUserLife()
+        
+
+        if "info" in dataBASS.contest:
+            #Contest
+
+            if not dataBASS.contest["ann"]:
+                dataBASS.contest["ann"] = True
+                state = dataBASS.contest["state"]
+                strAnn = ""
+                if state == -1:
+                    strAnn = ENUM.CON_1HOUR%(util.pickOne(ENUM.CON_FUNNY_Q))
+                elif state == -2:
+                    strAnn = ENUM.CON_1DAY%(util.pickOne(ENUM.CON_FUNNY_Q))
+                
+                if strAnn != "":
+
+                    x = await client.get_channel(ENUM.CON_ANN_CHANNEL).send(content = strAnn)
+                    await sayContestInfo(x)
+
+        if util.isSleepTime():
+            botName = defaultName
+            botStatus = Status.idle
+            botActivi = Game(name="น้องนอนอยู่")
+        elif ContestManager.timeState() == "NoContest":
+            botName = defaultName
+            if userLife == -1:
+                botStatus = Status.dnd
+                botActivi = Activity(name = "ไม่รู้ว่ามีคนทำโจทย์กี่คน... help()",type = ActivityType.playing,url = "https://otog.cf/")
+            elif userLife == 0:
+                botStatus = Status.online
+                botActivi = Activity(name = "ป่าช้า help()",type = ActivityType.listening,url = "https://otog.cf/")
+            else:
+                botStatus = Status.online
+                botActivi = Activity(name = f"คน {userLife} ทำโจทย์ help()",type = ActivityType.watching,url = "https://otog.cf/")
+        elif ContestManager.timeState() == "NotStart":
+            botName = defaultName
+            botStatus = Status.online
+            botActivi = Game(name=f"รอทำคอนเทส {dataBASS.contest['info']['id']}:{dataBASS.contest['info']['name']} ในอีก {util.lenTimeInThai(time.time(),ContestManager.timeParse(dataBASS.contest['info']['timeStart']))} help()")
+        else:
+            botName = f"{dataBASS.contest['info']['id']}:{dataBASS.contest['info']['name']}"
+            botStatus = Status.dnd
+            botActivi = Game(name=f"เหลือเวลา {util.lenTimeInThai(time.time(),ContestManager.timeParse(dataBASS.contest['info']['timeEnd']))}")
+        
+        await client.Set_Bot_Namae(botName)
+        await client.change_presence(status=botStatus,activity=botActivi)
+        await asyncio.sleep(1)
+
+
 async def sayhelp(chan, isAdmin:bool = False):
     em = Embed(title = ":grey_question:สิ่งที่น้อมทำได้:grey_question:",description = "มีแค่นี้แหละ",colour = Colour.from_rgb(255,133,29))
     em.add_field(name = ":grey_question:help()",value = "ก็ที่ทำอยู่ตอนนี้แหละ",inline=False)
     em.add_field(name = ":trophy:contest()",value = "คอนเทสที่กำลังจะมาถึง",inline=False)
     em.add_field(name = ":person_playing_handball:tasks()",value = "จำนวนโจทย์ตอนนี้",inline=False)
     em.add_field(name = ":military_medal:ranking()",value = "คำสั่งไว้ขิงกัน",inline=False)
-    em.add_field(name = ":question:question(<ชื่อโจทย์>) <คำถาม>",value = "ถามคำถามเกี่ยวกับโจทย์ <ชื่อโจทย์>\nและ<คำถาม>ควรตอบเป็น Yes/No(ใช่/ไม่ใช่)",inline=False)
+    #em.add_field(name = ":question:question(<ชื่อโจทย์>) <คำถาม>",value = "ถามคำถามเกี่ยวกับโจทย์ <ชื่อโจทย์>\nและ<คำถาม>ควรตอบเป็น Yes/No(ใช่/ไม่ใช่)",inline=False)
     em.add_field(name = ":wrench:change_Log()",value = "เป็นการตรวจสอบว่าบอทในรุ่นปัจจุบันมีอะไรเปลี่ยนแปลงบ้าง",inline=False)
     em.add_field(name = ":musical_note:OtogRadio(<ชื่อเพลง>)",value = "ขอเพลงได้ๆๆ",inline=False)
 
@@ -44,14 +110,14 @@ async def sayhelp(chan, isAdmin:bool = False):
 
     if isAdmin:
         em = Embed(title = ":grey_question:สิ่งที่แอดมินทำได้:grey_question:",description = "แค่ในนี้เท่านั้น",colour = Colour.red())
-        em.add_field(name = ":orange_heart:user_life()",value = "ดูว่าใครมีชีวิตอยู่บ้าง",inline=False)
+        #em.add_field(name = ":orange_heart:user_life()",value = "ดูว่าใครมีชีวิตอยู่บ้าง",inline=False)
         em.add_field(name = ":1234:Version()",value = "ตรวจสอบ Version",inline=False)
         em.add_field(name = ":loudspeaker:ann() <Text>",value = "ประกาศๆๆๆๆ",inline=False)
         em.add_field(name = ":loudspeaker:say(<Channel_ID>) <Text>",value = "ส่ง <Text> ไปยังห้อง <Channel_ID>",inline=False)
         em.add_field(name = ":eyes:read() <Text>",value = "เป็นการสั่งให้ตัว Console อ่าน <Text> แล้วทำการปริ้นออกมา",inline=False)
-        em.add_field(name = ":question:q_answer(<id>) <text>",value = "ตอบคำถามที่ <id> โดยคำถามจะหายด้วย",inline=False)
-        em.add_field(name = ":question:q_remove(<id>)",value = "ลบคำถามที่ <id>",inline=False)
-        em.add_field(name = ":question:q_clear()",value = "clear คำถามทั้งหมด(ต้องแน่ใจจริงๆว่าจะทำ)",inline=False)
+        #em.add_field(name = ":question:q_answer(<id>) <text>",value = "ตอบคำถามที่ <id> โดยคำถามจะหายด้วย",inline=False)
+        #em.add_field(name = ":question:q_remove(<id>)",value = "ลบคำถามที่ <id>",inline=False)
+        #em.add_field(name = ":question:q_clear()",value = "clear คำถามทั้งหมด(ต้องแน่ใจจริงๆว่าจะทำ)",inline=False)
         em.add_field(name = ":exclamation:test()",value = "ดูว่าน้องยังมีชีวิตอยู่ไหม",inline=False)
         em.add_field(name = ":exclamation:test_Verify()\\n<Code in C/C++>",value = "ทดสอบว่า Grader แมวๆยังใช้ได้ไหม",inline=False)
         em.add_field(name = ":exclamation:check_Verify()",value = "ดูว่ามีใครมา Verify ไหม",inline=False)
@@ -142,6 +208,27 @@ async def sayContestRanking(conId:int, chan):
         thisEm.set_footer(text = footerTag)
 
         await chan.send(content = None, embed = thisEm)
+
+async def sayContestInfo(mes):
+
+    if "info" not in dataBASS.contest:
+        await mes.channel.send(ENUM.CONTEST_NO)
+    else:
+        conInfo = dataBASS.contest["info"]
+
+        thisEm = Embed(title=f"Incoming Contest#{conInfo['id']}"\
+                ,colour = Colour.from_rgb(255,133,29)\
+                ,url = "https://otog.cf/contest")
+        thisEm.set_author(name = f"{conInfo['name']}",icon_url = "https://otog.cf/logo196.png")
+        thisEm.add_field(name = "การแข่งแบบ", value= conInfo['mode'])
+        thisEm.add_field(name = "การตรวจแบบ", value= conInfo['gradingMode'])
+        thisEm.add_field(name = "เวลาเริ่ม", value= util.formatInThai(ContestManager.timeParse(conInfo['timeStart'])), inline=False)
+        thisEm.add_field(name = "เวลาจบ", value= util.formatInThai(ContestManager.timeParse(conInfo['timeEnd'])), inline=False)
+        thisEm.add_field(name = "ระยะเวลา", value= util.lenTimeInThai(ContestManager.timeParse(conInfo['timeStart']),ContestManager.timeParse(conInfo['timeEnd'])), inline=False)
+
+        thisEm.set_footer(text = "ประกาศ ณ " + util.getNowTimeInThai())
+
+        await mes.channel.send(content = None, embed = thisEm)
 
 async def sayCLog(chan):
     CLog = "ตอนนี้ก็ไม่รู้เหมือนกัน"

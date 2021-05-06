@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 def getNumProblems():
@@ -54,7 +55,32 @@ def getRankingContest(nCon:int):
 
         return result
 
+def getUserLife():
+    #TODO: Waiting for OTOG
+    return -1
+
+def contestNow():
+
+    
+    # with open("TestContent.txt","r",encoding="utf8") as f:
+    #     x = json.loads(f.read())
+    # return x
+
+    response = requests.get(f"https://otog.cf/api/contest/now")
+    if response.status_code != 200:
+        return -1
+    else:
+        try:
+            data = response.json()
+        except:
+            return dict()
+        thisContest = dict()
+        for k in data:
+            if k != "problems":
+                thisContest[k] = data[k]
+        return thisContest
+
 
 if __name__ == "__main__":
-    print(getRankingContest(20))
+    print(contestNow())
 

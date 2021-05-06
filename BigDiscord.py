@@ -1,7 +1,7 @@
 import discord,random
 
 from discord import utils
-import ENUM,dataBASS,Verify
+import ENUM,dataBASS,Verify,ContestManager
 import BigDisCommand as cmd
 from util import *
 import GuessNumberGame as GNG
@@ -18,11 +18,16 @@ async def on_ready():
     print(client.user.id)
     print('------')
     dataBASS.loadFile()
+    ContestManager.reloading()
+    client.loop.create_task(cmd.botStatus(client))
     await client.Set_Bot_Namae(NAME)
 
 
 @client.event
 async def Set_Bot_Namae(Namae):
+
+    if len(Namae) > 28:Namae = Namae[:28]+"..."
+
     for GG in client.guilds:
         await GG.me.edit(nick = Namae)
 
@@ -99,6 +104,9 @@ async def on_message(mes):
 
     if thisCmd["command"]==(DEB + "ranking"):
         await cmd.sayRanking(mes)
+    
+    if thisCmd["command"]==(DEB + "contest"):
+        await cmd.sayContestInfo(mes)
     
 
     if thisCmd["command"]==(DEB + "otogradio"):
@@ -211,6 +219,9 @@ async def on_message(mes):
                 await cmd.sayThatChanel(mes,"ตรวจแป๊ป")
                 await cmd.sayThatChanel(mes,Verify.doJudge(code)[0])
 
+        if thisCmd["command"]==(DEB + "force_reload"):
+            ContestManager.reloading()
+            await cmd.sayThatChanel(mes,"จัดให้ห้ห้ห้ห้!!")
 
         if thisCmd["command"]==(DEB + "check_verify"):
             if len(dataBASS.verify) == 0:
@@ -291,6 +302,7 @@ def main(token:int, isTest:bool = False):
     global DEB,NAME
 
     if isTest:
+        cmd.defaultName = f"น้อนตัวน้อย V{ENUM.VER}"
         NAME = f"น้อนตัวน้อย V{ENUM.VER}"
         DEB = ">>"
 
