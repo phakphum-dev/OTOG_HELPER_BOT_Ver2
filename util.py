@@ -65,6 +65,28 @@ def isSleepTime():
     now = time.localtime()
     return 2 <= now.tm_hour <= 6
 
+def messageToUniqueID(mes):
+    mesID = mes.id
+    chanID = mes.channel.id
+    return (mesID,chanID)
+
+async def uID2Message(client,Ids):
+    mesId = Ids[0]
+    chaId = Ids[1]
+    try:
+        Cha = await client.fetch_channel(chaId)
+    except:
+        
+        return None
+    
+
+    try :
+        mes = await Cha.fetch_message(mesId)
+    except:
+        return None
+
+    return mes
+
 
 if __name__ == "__main__":
     print(getNowTimeInThai())

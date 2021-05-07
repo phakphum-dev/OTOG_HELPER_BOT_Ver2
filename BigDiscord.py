@@ -1,7 +1,7 @@
 import discord,random
 
 from discord import utils
-import ENUM,dataBASS,Verify,ContestManager
+import ENUM,dataBASS,Verify,ContestManager,questionManager
 import BigDisCommand as cmd
 from util import *
 import GuessNumberGame as GNG
@@ -135,7 +135,7 @@ async def on_message(mes):
         else:
             await cmd.sayThatChanel(mes,"เห้ย อย่าเล่นซ้ำเซ่!!!!??\nเวลาจะทายให้พิมพ์ `guess(ตัวเลข)` เอา!!! @author")
     
-    if thisCmd["command"]==(DEB + "guess") and not thisCmd["command"]==(DEB + "guess_num"):
+    if thisCmd["command"]==(DEB + "guess"):
         idPer = mes.author.id
         
         if GNG.remain(idPer) != -1:
@@ -157,6 +157,39 @@ async def on_message(mes):
             else:
                 result = GNG.guess(idPer, gus)
                 await cmd.sayThatChanel(mes,result)
+
+    if thisCmd["command"]==(DEB + "question"):
+        idPer = mes.author.id
+        if len(thisCmd["args"]) < 1:
+            await mes.author.send("เมื่อเจ้าถามอะไรอ่ะ??? เจ้าลืมใส่ชื่อโจทย์...")
+        elif thisCmd["value"] == "":
+            if questionManager.isAlreadyAsk(idPer, thisCmd["args"][0]):
+                
+                ids = questionManager.removeQuestion(idPer, thisCmd["args"][0])
+                for idd in ids:
+                    delMes = await uID2Message(client,idd)
+                    await delMes.delete()
+                await questionManager.reloadMessage(client)
+                await mes.author.send(f":x:ลบคำถาม `{thisCmd['args'][0]}` เรียบร้อยแล้ว...")
+            else:
+                await mes.author.send("เมื่อเจ้าถามอะไรอ่ะ??? เจ้าถามความว่างเปล่ารี?")
+        else:
+            if questionManager.isAlreadyAsk(idPer, thisCmd["args"]):
+                await mes.author.send(f":arrows_counterclockwise: เปลี่ยนคำถาม `{thisCmd['args'][0]}` เรียบร้อยแล้ว...")
+                idQ = questionManager.modifyQuestion(idPer, thisCmd["args"][0], thisCmd["value"])
+                await questionManager.reloadMessage(client, idQ)
+            else:
+                if questionManager.crtQuestion(idPer) >= 5:
+                    await mes.author.send("เจ้าหมดโค้วต้าการถามแล้ว... รอก่อนนะ")
+                else:
+                    mesIds = []
+                    mesIds.append(messageToUniqueID(await mes.author.send(ENUM.QUEST_USER%(thisCmd["args"][0],thisCmd["value"],"รอไปก่อนแบบใจเย็นๆ..."))))
+                    mesIds.append(messageToUniqueID(await client.get_channel(ENUM.QUE_CHANNEL).send(ENUM.QUEST_ADMIN%(questionManager.lenAllQuest()+1,thisCmd["args"][0],thisCmd["value"]))))
+                    questionManager.newQuestion(idPer, thisCmd["args"][0], thisCmd["value"], mesIds)
+        try:
+            await mes.delete()
+        except:
+            print("Can't delete message...")
 
     if isAdmin:
         
@@ -250,7 +283,68 @@ async def on_message(mes):
                 strr += f"\nรายงาน ณ {getNowTimeInThai()}"
             
             await cmd.sayThatChanel(mes,strr)
+        
+
+        if thisCmd["command"]==(DEB + "q_remove"):
+            if len(thisCmd["args"]) < 1:
+                await cmd.sayThatChanel(mes,"ล บ ค ว า ม ว่ า ง เ ป ล่ า")
+            elif not isInt(thisCmd["args"][0]):
+                await cmd.sayThatChanel(mes,"ID ควรเป็นจำนวนเต็มนะะนะนะนะนะนะ")
+            else:
+                idQ = int(thisCmd["args"][0])
+                if idQ > questionManager.lenAllQuest() or idQ <= 0:
+                    await cmd.sayThatChanel(mes,f"หา id {idQ} ไม่เจออ่ะะะ")
+                else:
+                    strRes = f":x:ลบคำถาม `{dataBASS.questions[idQ-1][1]}` ที่ถามว่า `{dataBASS.questions[idQ-1][2]}` เรียบร้อยแล้ว...\nสำเร็จโดย {mes.author.name}"
+                    idms = questionManager.removeQuestionInd(idQ-1)
+                    for idd in idms:
+                        delMes = await uID2Message(client,idd)
+                        await delMes.delete()
+                    await questionManager.reloadMessage(client)
+                    await client.get_channel(ENUM.QUE_HIS_CHANNEL).send(strRes)
+            await mes.delete()
+
+        if thisCmd["command"]==(DEB + "q_clear"):
+            strRes = f":fireworks:ระเบิดทุกๆคำถามเรียบร้อยแล้ว <:knowthatfeel:704310526200512622>\nสำเร็จโดย {mes.author.name}"
+            
+            for i in range(questionManager.lenAllQuest()-1,-1,-1):
+                idms = questionManager.removeQuestionInd(i)
+                for idd in idms:
+                    delMes = await uID2Message(client,idd)
+                    await delMes.delete()
+            
+            await client.get_channel(ENUM.QUE_HIS_CHANNEL).send(strRes)
+            await mes.delete()
+        
+        if thisCmd["command"]==(DEB + "q_answer"):
+            if len(thisCmd["args"]) < 1:
+                await cmd.sayThatChanel(mes,"ตอบข้อไหนอ่ะ??")
+            elif not isInt(thisCmd["args"][0]):
+                await cmd.sayThatChanel(mes,"ID ควรเป็นจำนวนเต็มนะะนะนะนะนะนะ")
+            elif thisCmd["value"] == "":
+                await cmd.sayThatChanel(mes,"ตอบความว่างเปล่า??\nถ้าจะลบคำถามให้ใช้ `q_remove(<id>)` นะๆ")
+            else:
+                idQ = int(thisCmd["args"][0]) - 1
                 
+                if idQ >= questionManager.lenAllQuest() or idQ < 0:
+                    await cmd.sayThatChanel(mes,f"หา id {idQ} ไม่เจออ่ะะะ")
+                else:
+                    bigQuestId = dataBASS.questions[idQ][1]
+                    bigQuest = dataBASS.questions[idQ][2]
+                    bigQuestAnswer = thisCmd["value"]
+                    strRes = f":white_check_mark:ตอบคำถามสำเร็จโดย {mes.author.name}\nในข้อ `{bigQuestId}`\n:regional_indicator_q: : `{bigQuest}`\n:regional_indicator_a: : `{bigQuestAnswer}`"
+                    idms = questionManager.removeQuestionInd(idQ)
+                    
+                    userMess = await uID2Message(client,idms[0])
+                    await userMess.channel.send(ENUM.QUEST_USER%(bigQuestId,bigQuest,bigQuestAnswer))
+                    await userMess.delete()
+
+                    admiMess = await uID2Message(client,idms[1])
+                    await admiMess.delete()
+
+                    await questionManager.reloadMessage(client)
+                    await client.get_channel(ENUM.QUE_HIS_CHANNEL).send(strRes)
+            await mes.delete()
     #PART Verify
     if thisCmd["command"]==(DEB + "verify"):
         
@@ -284,7 +378,7 @@ async def on_message(mes):
             newRole = discord.utils.get(mes.guild.roles,name = "OTOGer")
             await mes.author.send(f"```cpp\n{code}```\n")
             await mes.author.send(result[0])
-            await mes.author.edit(roles = [newRole]) #TODO:Don't for get!
+            await mes.author.edit(roles = [newRole])
             await mes.delete()
             Verify.removeId(idPer)
         else:

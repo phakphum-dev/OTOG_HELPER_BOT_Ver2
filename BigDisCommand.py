@@ -19,7 +19,7 @@ def parseCommand(content:str):
         args.append(chunk.strip())
     
     if len(content) > content.find(")")+1:
-        value = content[content.find(")")+1:]
+        value = content[content.find(")")+1:].strip()
     
     if len(args) == 1 and args[0] == "":
         return {"command" : command, "args":[], "value":value}
@@ -93,13 +93,14 @@ async def botStatus(client):
         await asyncio.sleep(1)
 
 
+
 async def sayhelp(chan, isAdmin:bool = False):
     em = Embed(title = ":grey_question:สิ่งที่น้อมทำได้:grey_question:",description = "มีแค่นี้แหละ",colour = Colour.from_rgb(255,133,29))
     em.add_field(name = ":grey_question:help()",value = "ก็ที่ทำอยู่ตอนนี้แหละ",inline=False)
     em.add_field(name = ":trophy:contest()",value = "คอนเทสที่กำลังจะมาถึง",inline=False)
     em.add_field(name = ":person_playing_handball:tasks()",value = "จำนวนโจทย์ตอนนี้",inline=False)
     em.add_field(name = ":military_medal:ranking()",value = "คำสั่งไว้ขิงกัน",inline=False)
-    #em.add_field(name = ":question:question(<ชื่อโจทย์>) <คำถาม>",value = "ถามคำถามเกี่ยวกับโจทย์ <ชื่อโจทย์>\nและ<คำถาม>ควรตอบเป็น Yes/No(ใช่/ไม่ใช่)",inline=False)
+    em.add_field(name = ":question:question(<ชื่อโจทย์>) <คำถาม>",value = "ถามคำถามเกี่ยวกับโจทย์ <ชื่อโจทย์>\nและ<คำถาม>ควรตอบเป็น Yes/No(ใช่/ไม่ใช่)",inline=False)
     em.add_field(name = ":wrench:change_Log()",value = "เป็นการตรวจสอบว่าบอทในรุ่นปัจจุบันมีอะไรเปลี่ยนแปลงบ้าง",inline=False)
     em.add_field(name = ":musical_note:OtogRadio(<ชื่อเพลง>)",value = "ขอเพลงได้ๆๆ",inline=False)
 
@@ -118,9 +119,9 @@ async def sayhelp(chan, isAdmin:bool = False):
         em.add_field(name = ":loudspeaker:ann() <Text>",value = "ประกาศๆๆๆๆ",inline=False)
         em.add_field(name = ":loudspeaker:say(<Channel_ID>) <Text>",value = "ส่ง <Text> ไปยังห้อง <Channel_ID>",inline=False)
         em.add_field(name = ":eyes:read() <Text>",value = "เป็นการสั่งให้ตัว Console อ่าน <Text> แล้วทำการปริ้นออกมา",inline=False)
-        #em.add_field(name = ":question:q_answer(<id>) <text>",value = "ตอบคำถามที่ <id> โดยคำถามจะหายด้วย",inline=False)
-        #em.add_field(name = ":question:q_remove(<id>)",value = "ลบคำถามที่ <id>",inline=False)
-        #em.add_field(name = ":question:q_clear()",value = "clear คำถามทั้งหมด(ต้องแน่ใจจริงๆว่าจะทำ)",inline=False)
+        em.add_field(name = ":question:q_answer(<id>) <text>",value = "ตอบคำถามที่ <id> โดยคำถามจะหายด้วย",inline=False)
+        em.add_field(name = ":question:q_remove(<id>)",value = "ลบคำถามที่ <id>",inline=False)
+        em.add_field(name = ":question:q_clear()",value = "clear คำถามทั้งหมด(ต้องแน่ใจจริงๆว่าจะทำ)",inline=False)
         em.add_field(name = ":exclamation:test()",value = "ดูว่าน้องยังมีชีวิตอยู่ไหม",inline=False)
         em.add_field(name = ":exclamation:test_Verify()\\n<Code in C/C++>",value = "ทดสอบว่า Grader แมวๆยังใช้ได้ไหม",inline=False)
         em.add_field(name = ":exclamation:check_Verify()",value = "ดูว่ามีใครมา Verify ไหม",inline=False)

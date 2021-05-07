@@ -5,16 +5,17 @@ from os import path
 guessNumberGame = dict()
 verify = dict()
 contest = dict()
+questions = list()
 
 
 def saveFile():
-    temp = {"GNG" : guessNumberGame, "VER" : verify, "CON" : contest}
+    temp = {"GNG" : guessNumberGame, "VER" : verify, "CON" : contest, "Q":questions}
     jsonContent = json.dumps(temp)
     with open(path.join(ENUM.PATH,"data.otog"),"w",encoding="utf-8") as f:
         f.write(jsonContent)
 
 def loadFile():
-    global guessNumberGame,verify
+    global guessNumberGame,verify,contest,questions
     if path.exists(path.join(ENUM.PATH,"data.otog")):
         with open(path.join(ENUM.PATH,"data.otog"),"r",encoding="utf-8") as f:
             jsonContent = f.read()
@@ -38,6 +39,11 @@ def loadFile():
             contest = jsonContent["CON"]
         else:
             contest = dict()
+
+        if "Q" in jsonContent:
+            questions = jsonContent["Q"]
+        else:
+            questions = list()
         
     else:
         print("data.otog not found...")
