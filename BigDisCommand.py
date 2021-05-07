@@ -85,8 +85,11 @@ async def botStatus(client):
             botStatus = Status.dnd
             botActivi = Game(name=f"เหลือเวลา {util.lenTimeInThai(time.time(),ContestManager.timeParse(dataBASS.contest['info']['timeEnd']))}")
         
-        await client.Set_Bot_Namae(botName)
-        await client.change_presence(status=botStatus,activity=botActivi)
+        try:
+            await client.Set_Bot_Namae(botName)
+            await client.change_presence(status=botStatus,activity=botActivi)
+        except:
+            print("Warning... Can't change status")
         await asyncio.sleep(1)
 
 
