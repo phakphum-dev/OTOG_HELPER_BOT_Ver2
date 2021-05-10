@@ -213,7 +213,7 @@ async def on_message(mes):
             elif not isInt(thisCmd["args"][0]):
                 await cmd.sayThatChanel(mes,"Channel_ID ควรเป็น int นะะ")
             else:
-                await cmd.sayAnn(mes, client, thisCmd["value"].strip(), int(thisCmd["args"][0]))
+                await cmd.sayAnother(mes, client, thisCmd["value"].strip(), int(thisCmd["args"][0]))
         
         if thisCmd["command"]==(DEB + "read"):
             if thisCmd["value"].strip() == "":
