@@ -9,7 +9,10 @@ import GuessNumberGame as GNG
 DEB = "" #Before Command
 NAME = "OTOG - One Tambon One Grader"
 
-client = discord.Client()
+
+thisIntents = discord.Intents.default()
+thisIntents.members = True
+client = discord.Client(intents=thisIntents)
 
 @client.event
 async def on_ready():
