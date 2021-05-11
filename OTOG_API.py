@@ -62,9 +62,9 @@ def getUserLife():
 def contestNow():
 
     
-    with open("TestContent.txt","r",encoding="utf8") as f:
-        x = json.loads(f.read())
-    return x
+    # with open("TestContent.txt","r",encoding="utf8") as f:
+    #     x = json.loads(f.read())
+    # return x
 
     response = requests.get(f"https://otog.cf/api/contest/now")
     if response.status_code != 200:
