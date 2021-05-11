@@ -98,7 +98,7 @@ async def botStatus(client):
             await client.change_presence(status=botStatus,activity=botActivi)
         except:
             print("Warning... Can't change status")
-        await asyncio.sleep(1)
+        await asyncio.sleep(5)
 
 
 
