@@ -43,7 +43,7 @@ def nameWithPlace(name:str, place:int)->str:
         return f":keycap_ten:{name}:medal:"
     return ""
 
-def lenTimeInThai(time1:float,time2:float)->str:
+def lenTimeInThai(time1:float,time2:float,lim:str = "")->str:
     delta = int(abs(time1 - time2))
     sec = delta%60
     minu = (delta//60)%(60)
@@ -52,9 +52,9 @@ def lenTimeInThai(time1:float,time2:float)->str:
 
     res = ""
     if days != 0: res += f"{days} วัน "
-    if hour != 0: res += f"{hour} ชั่วโมง "
-    if minu != 0: res += f"{minu} นาที "
-    if sec != 0: res += f"{sec} วินาที "
+    if hour != 0 and lim != "h": res += f"{hour} ชั่วโมง "
+    if minu != 0 and lim != "m" and lim != "h": res += f"{minu} นาที "
+    if sec != 0 and lim != "s" and lim != "m" and lim != "h": res += f"{sec} วินาที "
     return res.strip()
 
 def pickOne(x:list):
