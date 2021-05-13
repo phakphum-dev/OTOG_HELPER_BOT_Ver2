@@ -46,7 +46,7 @@ async def botStatus(client):
 
         if "info" in dataBASS.contest:
             #Contest
-
+            ContestManager.reVerState()
             if not dataBASS.contest["ann"]:
                 dataBASS.contest["ann"] = True
                 state = dataBASS.contest["state"]
