@@ -67,7 +67,7 @@ async def on_message(mes):
         await cmd.sayThatChanel(mes,f"ทีหลังพิมพ์คำสั่งควรมีวงเล็บด้วยนะ @author")
         return
 
-    thisCmd = cmd.parseCommand(mes.content.lower())
+    thisCmd = cmd.parseCommand(mes.content)
 
     #Check first
     if mes.author.id == client.user.id:
