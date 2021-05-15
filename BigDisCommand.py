@@ -52,7 +52,6 @@ async def botStatus(client):
                 state = dataBASS.contest["state"]
                 strAnn = ""
                 if state == -1:
-                    strAnn = ENUM.CON_1HOUR%(util.pickOne(ENUM.CON_FUNNY_Q))
                     if 59*60 <= abs(time.time() - ContestManager.timeParse(dataBASS.contest["info"]["timeStart"])) <= 61*60 :
                         strAnn = ENUM.CON_ANN_TEXT%("1 ชั่วโมง", util.pickOne(ENUM.CON_FUNNY_Q))
                     else:
