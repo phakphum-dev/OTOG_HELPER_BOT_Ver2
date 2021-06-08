@@ -9,6 +9,7 @@ def getNumProblems():
     else:
         return len(response.json())
 
+
 def getRanking():
     response = requests.get("https://otog.cf/api/user")
     if response.status_code != 200:
@@ -19,14 +20,15 @@ def getRanking():
 
         for user in data:
             if user["role"] == "user" and user["rating"] != None:
-                ranking.append((user["rating"],user["showName"]))
-        
+                ranking.append((user["rating"], user["showName"]))
+
         ranking.sort(key=lambda x: x[0])
         ranking.reverse()
 
         return ranking
 
-def getRankingContest(nCon:int):
+
+def getRankingContest(nCon: int):
     response = requests.get(f"https://otog.cf/api/contest/{nCon}/scoreboard")
     if response.status_code != 200:
         return -1
@@ -37,7 +39,8 @@ def getRankingContest(nCon:int):
         result["name"] = data["name"]
         result["problem"] = list()
         for problem in data["problems"]:
-            result["problem"].append((f"({problem['id']}){problem['name']} : {problem['score']} คะแนน"))
+            result["problem"].append(
+                (f"({problem['id']}){problem['name']} : {problem['score']} คะแนน"))
 
         result["ranking"] = list()
 
@@ -48,20 +51,26 @@ def getRankingContest(nCon:int):
                 for sc in user["submissions"]:
                     scores.append(sc["score"])
                     timeUse += sc["timeUsed"]
-                result["ranking"].append((user["showName"],scores,timeUse))
-        
+                result["ranking"].append((user["showName"], scores, timeUse))
+
             result["ranking"].sort(key=lambda x: sum(x[1]))
             result["ranking"].reverse()
 
         return result
 
+
 def getUserLife():
-    #TODO: Waiting for OTOG
-    return -1
+
+    response = requests.get("https://otog.cf/api/user/online")
+    if response.status_code != 200:
+        return -1
+    else:
+        data = response.json()
+        return len(data)
+
 
 def contestNow():
 
-    
     # with open("TestContent.txt","r",encoding="utf8") as f:
     #     x = json.loads(f.read())
     # return x
@@ -83,4 +92,3 @@ def contestNow():
 
 if __name__ == "__main__":
     print(contestNow())
-
