@@ -91,4 +91,4 @@ def contestNow():
 
 
 if __name__ == "__main__":
-    print(contestNow())
+    print(getUserLife())
