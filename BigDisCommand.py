@@ -93,7 +93,7 @@ async def botStatus(client):
             else:
                 botStatus = Status.online
                 botActivi = Activity(
-                    name=f"คน {userLife} ทำโจทย์ help()", type=ActivityType.watching, url="https://otog.cf/")
+                    name=f"{userLife} ทำโจทย์ help()", type=ActivityType.watching, url="https://otog.cf/")
         elif ContestManager.timeState() == "NotStart":
             botName = defaultName
             botStatus = Status.online

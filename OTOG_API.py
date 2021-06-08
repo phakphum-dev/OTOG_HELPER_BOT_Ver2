@@ -66,7 +66,14 @@ def getUserLife():
         return -1
     else:
         data = response.json()
-        return len(data)
+        outStr = ""
+        if len(data) <= 7:
+            for i in range(len(data)-1):
+                outStr += data[i]["showName"] + ","
+            outStr += "และ" + data[i]["showName"][-1]
+        else:
+            outStr += f"คน {len(data)} คน"
+        return outStr
 
 
 def contestNow():
