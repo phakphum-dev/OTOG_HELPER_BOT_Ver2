@@ -67,7 +67,9 @@ def getUserLife():
     else:
         data = response.json()
         outStr = ""
-        if len(data) <= 7:
+        if len(data) == 0:
+            return 0
+        elif len(data) <= 7:
             for i in range(len(data)-1):
                 outStr += data[i]["showName"] + ","
             outStr += "และ" + data[i]["showName"][-1]
