@@ -41,13 +41,13 @@ async def botStatus(client):
 
         if ContestManager.isDuringContest():
             TIMF = ENUM.TIME_F_CONTEST
-
         if timeTick >= TIMF:
             # Reloading API stuff goes here
             timeTick %= TIMF
             if not util.isSleepTime():
                 ContestManager.reloading()
                 userLife = OTOG_API.getUserLife()
+        timeTick += 1
 
         if "info" in dataBASS.contest:
             # Contest
