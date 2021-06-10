@@ -72,7 +72,7 @@ def getUserLife():
         elif len(data) <= 7:
             for i in range(len(data)-1):
                 outStr += data[i]["showName"] + ","
-            outStr += "และ" + data[i]["showName"][-1]
+            outStr += "และ" + data[-1]["showName"]
         else:
             outStr += f"คน {len(data)} คน"
         return outStr
