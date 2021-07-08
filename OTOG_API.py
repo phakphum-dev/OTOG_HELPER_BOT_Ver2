@@ -3,7 +3,11 @@ import json
 
 
 def getNumProblems():
-    response = requests.get("https://otog.cf/api/problem")
+    try:
+        response = requests.get("https://otog.cf/api/problem")
+    except:
+        return -1
+
     if response.status_code != 200:
         return -1
     else:
@@ -11,7 +15,11 @@ def getNumProblems():
 
 
 def getRanking():
-    response = requests.get("https://otog.cf/api/user")
+    try:
+        response = requests.get("https://otog.cf/api/user")
+    except:
+        return -1
+
     if response.status_code != 200:
         return -1
     else:
@@ -29,7 +37,11 @@ def getRanking():
 
 
 def getRankingContest(nCon: int):
-    response = requests.get(f"https://otog.cf/api/contest/{nCon}/scoreboard")
+    try:
+        response = requests.get(
+            f"https://otog.cf/api/contest/{nCon}/scoreboard")
+    except:
+        return -1
     if response.status_code != 200:
         return -1
     else:
@@ -60,8 +72,10 @@ def getRankingContest(nCon: int):
 
 
 def getUserLife():
-
-    response = requests.get("https://otog.cf/api/user/online")
+    try:
+        response = requests.get("https://otog.cf/api/user/online")
+    except:
+        return -1
     if response.status_code != 200:
         return -1
     else:
@@ -100,4 +114,4 @@ def contestNow():
 
 
 if __name__ == "__main__":
-    print(getUserLife())
+    print(contestNow())
