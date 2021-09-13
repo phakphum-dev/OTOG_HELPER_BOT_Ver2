@@ -4,7 +4,7 @@ import json
 
 def getNumProblems():
     try:
-        response = requests.get("https://otog.cf/api/problem")
+        response = requests.get("https://api.otog.cf/problem")
     except:
         return -1
 
@@ -16,7 +16,7 @@ def getNumProblems():
 
 def getRanking():
     try:
-        response = requests.get("https://otog.cf/api/user")
+        response = requests.get("https://api.otog.cf/user")
     except:
         return -1
 
@@ -39,7 +39,7 @@ def getRanking():
 def getRankingContest(nCon: int):
     try:
         response = requests.get(
-            f"https://otog.cf/api/contest/{nCon}/scoreboard")
+            f"https://api.otog.cf/contest/{nCon}/scoreboard")
     except:
         return -1
     if response.status_code != 200:
@@ -73,7 +73,7 @@ def getRankingContest(nCon: int):
 
 def getUserLife():
     try:
-        response = requests.get("https://otog.cf/api/user/online")
+        response = requests.get("https://api.otog.cf/user/online")
     except:
         return -1
     if response.status_code != 200:
@@ -83,10 +83,12 @@ def getUserLife():
         outStr = ""
         if len(data) == 0:
             return 0
+        elif len(data) == 1:
+            outStr += f"{data[0]['showName']}(คนเหงา)"
         elif len(data) <= 7:
             for i in range(len(data)-1):
                 outStr += data[i]["showName"] + ","
-            outStr += "และ" + data[-1]["showName"]
+            outStr = outStr[:-1] + "และ" + data[-1]["showName"]
         else:
             outStr += f"คน {len(data)} คน"
         return outStr
@@ -98,7 +100,7 @@ def contestNow():
     #     x = json.loads(f.read())
     # return x
 
-    response = requests.get(f"https://otog.cf/api/contest/now")
+    response = requests.get(f"https://api.otog.cf/contest/now")
     if response.status_code != 200:
         return -1
     else:
