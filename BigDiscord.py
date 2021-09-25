@@ -288,7 +288,8 @@ async def on_message(mes):
                 await cmd.sayThatChanel(mes, "ไม่มีข้อมูลการ Verify ของ ID นี้นะ")
             else:
                 idPer = int(thisCmd['args'][0])
-                strr = f"======ข้อมูล Verify ของ {await cmd.getNameFromId(client, mes, idPer)}======\n\n"
+                namae = await cmd.getNameFromId(client, mes, idPer)
+                strr = f"======ข้อมูล Verify ของ {namae}======\n\n"
                 for i in range(len(dataBASS.verify[str(idPer)])):
                     strr += f"การส่งครั้งที่ {i+1}...\n```cpp\n{dataBASS.verify[str(idPer)][i]}\n```\n\n"
 
