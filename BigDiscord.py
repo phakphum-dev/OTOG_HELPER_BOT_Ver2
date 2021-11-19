@@ -268,13 +268,15 @@ async def on_message(mes):
             await cmd.sayThatChanel(mes, "จัดให้ห้ห้ห้ห้!!")
 
         if thisCmd["command"] == (DEB + "check_verify"):
-            if len(dataBASS.verify) == 0:
+            verifyData = Verify.getDistinctData()
+            if len(verifyData) == 0:
                 await cmd.sayThatChanel(mes, "เย่... ยังไม่มีใครมา Verify เลย\n*เ ห ง า จุ ง*")
             else:
-                strr = f"ตอนนี้มี `{len(dataBASS.verify)}` คนที่กำลังอยู่ในระหว่างการดำเนินการ Verify...\n"
-                for ids in dataBASS.verify:
+                strr = f"ตอนนี้มี `{len(verifyData)}` คนที่กำลังอยู่ในระหว่างการดำเนินการ Verify...\n"
+                for someData in verifyData:
+                    ids = someData[0]
                     namae = await cmd.getNameFromId(client, mes, int(ids))
-                    strr += f"-{namae}({ids}) เหลืออีก {5 - len(dataBASS.verify[ids])} ครั้ง\n"
+                    strr += f"-{namae}({ids}) เหลืออีก {5 - someData[1]} ครั้ง\n"
                 strr += f"\nรายงาน ณ {getNowTimeInThai()}"
 
                 await cmd.sayThatChanel(mes, strr)

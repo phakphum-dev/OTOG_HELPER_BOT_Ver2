@@ -116,4 +116,5 @@ def contestNow():
 
 
 if __name__ == "__main__":
-    print(contestNow())
+    response = requests.get("https://api.otog.cf/user/online")
+    print(response.json()[1]["username"])

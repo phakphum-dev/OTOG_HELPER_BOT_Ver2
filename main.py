@@ -1,4 +1,7 @@
-import BigDiscord,ENUM
+import BigDiscord
+import ENUM
+import dataBassSQL as sql
+import configparser as cfg
 from os import path
 
 
@@ -6,23 +9,20 @@ def main():
 
     thisToken = 0
 
-    if path.exists(path.join(ENUM.PATH,"__TOKEN__.txt")):
-        with open(path.join(ENUM.PATH,"__TOKEN__.txt")) as f:
-            thisToken = f.read().strip()
-            print(f"Found __TOKEN__\n{thisToken}\n")
+    if path.exists(path.join(ENUM.PATH, "BigConfig.ini")):
+        config = cfg.ConfigParser()
+        config.read(path.join(ENUM.PATH, "BigConfig.ini"))
+        print(f"Read config!")
     else:
-        thisToken = input("Tell me your TOKEN :) : ")
-        if thisToken == "":
-            print("WTF MANN")
-            exit(1)
-        print("You can create file name '__TOKEN__.txt'\nand save with your *token*\nIn next you don't need to tell me your token :)")
+        print("BigConfig.ini not found :(")
+        exit(1)
 
+    thisToken = config["Discord"]["TOKEN"]
+    sql.initData(config["SQL"]["Name"], config["SQL"]
+                 ["User"], config["SQL"]["Password"])
 
-    BigDiscord.main(thisToken, path.exists(path.join(ENUM.PATH,"Islami")))
+    BigDiscord.main(thisToken, config["Discord"]
+                    ["Debug_Mode"].lower() == "true")
 
 
 main()
-
-
-
-
