@@ -2,6 +2,7 @@
 Name = 
 User = 
 Password = 
+host = 
 
 [Discord]
 TOKEN = 
