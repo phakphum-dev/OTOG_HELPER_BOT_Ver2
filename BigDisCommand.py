@@ -74,7 +74,7 @@ async def botStatus(client):
 
                 if strAnn != "":
 
-                    x = await client.get_channel(ENUM.ANN_CHANNEL).send(content=strAnn)
+                    x = await client.get_channel(ENUM.CONTEST_ANN).send(content=strAnn)
                     await sayContestInfo(x)
         if util.isSleepTime():
             botName = defaultName
