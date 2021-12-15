@@ -49,10 +49,6 @@ async def on_guild_join(guild):
 
 @client.event
 async def on_member_join(member):
-    ALL_ROLE = member.guild.roles
-
-    role = discord.utils.get(ALL_ROLE, name="return 0;")
-    await member.edit(roles=[role])
 
     guild = member.guild
     if guild.system_channel is not None:
@@ -89,13 +85,13 @@ async def on_message(mes):
     isAdmin = False
     if hasattr(mes.author, 'roles'):
         for r in mes.author.roles:
-            if str(r) == "Administrator":
+            if str(r) == "VETERAN OTOGer":
                 isAdmin = True
 
     isAdminChan = False
     if hasattr(mes.channel, 'changed_roles'):
         for r in mes.channel.changed_roles:
-            if str(r) == "Administrator":
+            if str(r) == "VETERAN OTOGer":
                 isAdminChan = True
 
     isAdmin = isAdmin and isAdminChan
