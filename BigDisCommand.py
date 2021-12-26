@@ -118,6 +118,7 @@ async def botStatus(client):
                     await sayContestInfo(x)
 
         if not isOTOGWorking:
+            botName = defaultName
             botStatus = Status.dnd
             botActivi = Activity(
                 name="เซิฟระเบิดดดด!!! help()",
