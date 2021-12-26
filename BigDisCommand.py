@@ -36,15 +36,15 @@ def parseCommand(content: str):
 async def botStatus(client):
     timeTick = ENUM.TIME_F_NORMAL
     userLife = -1
-    isOTOGWorking = True
+    isOTOGWorking = OTOG_API.isWorking()
     while True:
         TIMF = ENUM.TIME_F_NORMAL
 
-        if ContestManager.isDuringContest():
+        if isOTOGWorking and ContestManager.isDuringContest():
             TIMF = ENUM.TIME_F_CONTEST
         if timeTick >= TIMF:
             # Reloading API stuff goes here
-            timeTick %= TIMF
+            timeTick = 0
             isOTOGWorking = OTOG_API.isWorking()
 
             if not util.isSleepTime():
