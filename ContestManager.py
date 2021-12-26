@@ -2,9 +2,10 @@ import dataBASS
 import OTOG_API
 import time
 
-def timeParse(con:str):
-    con = con[:con.find(".")]+"Z"
-    return time.mktime(time.strptime(con,"%Y-%m-%dT%H:%M:%SZ"))+60*60*7
+
+def timeParse(con: str):
+    con = con[: con.find(".")] + "Z"
+    return time.mktime(time.strptime(con, "%Y-%m-%dT%H:%M:%SZ")) + 60 * 60 * 7
 
 
 def verifyState():
@@ -14,21 +15,22 @@ def verifyState():
     # state 0 is now
     if time.time() > timeParse(dataBASS.contest["info"]["timeStart"]):
         state = 0
-    elif time.time() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60*60:
+    elif time.time() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60 * 60:
         state = -1
-    elif time.time() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60*60*24:
+    elif time.time() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60 * 60 * 24:
         state = -2
     else:
         state = -3
-    
+
     dataBASS.contest["state"] = state
+
 
 def reVerState():
     if time.time() > timeParse(dataBASS.contest["info"]["timeStart"]):
         nState = 0
-    elif time.time() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60*60:
+    elif time.time() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60 * 60:
         nState = -1
-    elif time.time() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60*60*24:
+    elif time.time() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60 * 60 * 24:
         nState = -2
     else:
         nState = -3
@@ -38,14 +40,12 @@ def reVerState():
         if nState != 0:
             dataBASS.contest["ann"] = False
 
+
 def mkNewContest(otogCon):
-    dataBASS.contest = {
-        "info" : otogCon,
-        "state" : 0,
-        "ann" : False
-    }
+    dataBASS.contest = {"info": otogCon, "state": 0, "ann": False}
     verifyState()
     dataBASS.saveFile()
+
 
 def timeState():
 
@@ -62,13 +62,16 @@ def timeState():
         else:
             return "NoContest"
 
+
 def reloading():
+    if not OTOG_API.isWorking():
+        return
     otogCon = OTOG_API.contestNow()
     if otogCon != -1:
         if "timeEnd" not in otogCon:
             dataBASS.contest = dict()
             dataBASS.saveFile()
-            return 
+            return
         else:
             timeStart = timeParse(otogCon["timeStart"])
             timeEnd = timeParse(otogCon["timeEnd"])
@@ -93,7 +96,6 @@ def isDuringContest():
     else:
         return dataBASS.contest["state"] == 0
 
+
 if __name__ == "__main__":
     reloading()
-
-
