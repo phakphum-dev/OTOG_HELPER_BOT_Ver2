@@ -38,8 +38,7 @@ def getRanking():
 
 def getRankingContest(nCon: int):
     try:
-        response = requests.get(
-            f"https://api.otog.cf/contest/{nCon}/scoreboard")
+        response = requests.get(f"https://api.otog.cf/contest/{nCon}/scoreboard")
     except:
         return -1
     if response.status_code != 200:
@@ -52,7 +51,8 @@ def getRankingContest(nCon: int):
         result["problem"] = list()
         for problem in data["problems"]:
             result["problem"].append(
-                (f"({problem['id']}){problem['name']} : {problem['score']} คะแนน"))
+                (f"({problem['id']}){problem['name']} : {problem['score']} คะแนน")
+            )
 
         result["ranking"] = list()
 
@@ -84,10 +84,10 @@ def getUserLife():
         if len(data) == 0:
             return 0
         elif len(data) == 1:
-            outStr += f"{data[0]['showName']}(คนเหงา)"
+            outStr += f"{data[0]['showName']} (คนเหงา)"
         elif len(data) <= 7:
-            for i in range(len(data)-1):
-                outStr += data[i]["showName"] + ","
+            for i in range(len(data) - 1):
+                outStr += data[i]["showName"] + ", "
             outStr = outStr[:-1] + "และ" + data[-1]["showName"]
         else:
             outStr += f"คน {len(data)} คน"
@@ -115,6 +115,14 @@ def contestNow():
         return thisContest
 
 
+def isWorking() -> bool:
+    try:
+        response = requests.get(f"https://otog.cf", timeout=5)
+    except:
+        return False
+    return 200 <= response.status_code < 300
+
+
 if __name__ == "__main__":
-    response = requests.get("https://api.otog.cf/user/online")
-    print(response.json()[1]["username"])
+    # response = requests.get("https://api.otog.cf/user/online")
+    print(isWorking())
