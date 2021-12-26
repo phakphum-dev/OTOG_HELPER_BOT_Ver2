@@ -47,19 +47,12 @@ async def botStatus(client):
             timeTick = 0
             isOTOGWorking = OTOG_API.isWorking()
 
-            if not util.isSleepTime():
+            if isOTOGWorking and not util.isSleepTime():
                 ContestManager.reloading()
                 userLife = OTOG_API.getUserLife()
         timeTick += 1
 
-        if not isOTOGWorking:
-            botStatus = Status.dnd
-            botActivi = Activity(
-                name="เซิฟระเบิดดดด!!! help()",
-                type=ActivityType.playing,
-                url="https://otog.cf/",
-            )
-        elif "info" in dataBASS.contest:
+        if isOTOGWorking and "info" in dataBASS.contest:
             # Contest
             ContestManager.reVerState()
             if not dataBASS.contest["ann"]:
@@ -123,7 +116,15 @@ async def botStatus(client):
 
                     x = await client.get_channel(ENUM.CONTEST_ANN).send(content=strAnn)
                     await sayContestInfo(x)
-        if util.isSleepTime():
+
+        if not isOTOGWorking:
+            botStatus = Status.dnd
+            botActivi = Activity(
+                name="เซิฟระเบิดดดด!!! help()",
+                type=ActivityType.playing,
+                url="https://otog.cf/",
+            )
+        elif util.isSleepTime():
             botName = defaultName
             botStatus = Status.idle
             botActivi = Game(name="น้องนอนอยู่")
