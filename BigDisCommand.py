@@ -120,11 +120,7 @@ async def botStatus(client):
         if not isOTOGWorking:
             botName = defaultName
             botStatus = Status.dnd
-            botActivi = Activity(
-                name="เซิฟระเบิดดดด!!! help()",
-                type=ActivityType.playing,
-                url="https://otog.cf/",
-            )
+            botActivi = Game(name="เซิฟระเบิดดดด!!! help()")
         elif util.isSleepTime():
             botName = defaultName
             botStatus = Status.idle
