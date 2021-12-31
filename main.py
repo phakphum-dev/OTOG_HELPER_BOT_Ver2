@@ -19,7 +19,8 @@ def main():
 
     thisToken = config["Discord"]["TOKEN"]
     sql.initData(config["SQL"]["Name"], config["SQL"]
-                 ["User"], config["SQL"]["Password"], config["SQL"]["Host"])
+                 ["User"], config["SQL"]["Password"], config["SQL"]["Host"],
+                 config["SQL"]["Port"])
 
     BigDiscord.main(thisToken, config["Discord"]
                     ["Debug_Mode"].lower() == "true")

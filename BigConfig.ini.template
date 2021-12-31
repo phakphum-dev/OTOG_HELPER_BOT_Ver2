@@ -1,8 +1,10 @@
 [SQL]
+Host = 
+Port = 
 Name = 
 User = 
 Password = 
-Host = 
+
 
 [Discord]
 TOKEN = 

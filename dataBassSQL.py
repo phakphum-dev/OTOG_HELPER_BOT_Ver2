@@ -4,12 +4,13 @@ thatCursor = None
 con = None
 
 
-def initData(dbName: str, dbUser: str, dbPassword: str, hostt: str):
+def initData(dbName: str, dbUser: str, dbPassword: str, dbHost: str, dbPort : str):
     global thatCursor, con
     con = sql.connect(database=dbName,
                       user=dbUser,
                       password=dbPassword,
-                      host=hostt)
+                      host=dbHost,
+                      port=dbPort)
     thatCursor = con.cursor()
 
 
