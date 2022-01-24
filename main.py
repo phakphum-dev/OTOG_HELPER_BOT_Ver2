@@ -18,12 +18,23 @@ def main():
         exit(1)
 
     thisToken = config["Discord"]["TOKEN"]
-    sql.initData(config["SQL"]["Name"], config["SQL"]
-                 ["User"], config["SQL"]["Password"], config["SQL"]["Host"],
-                 config["SQL"]["Port"])
 
-    BigDiscord.main(thisToken, config["Discord"]
-                    ["Debug_Mode"].lower() == "true")
+    envConfig = dict()
+    if path.exists(path.join(ENUM.PATH, ".env")):
+        print(f"Read env!")
+        with open(".env","r") as f:
+            for line in f:
+                if line.strip()[0] != "#" and '=' in line:
+                    envConfig[line.split('=')[0]] = ("=".join(line.split('=')[1:])).strip()
+    else:
+        print(".env not found :(")
+        exit(1)
+
+    sql.initData(envConfig["DB_DATABASE"], envConfig["DB_USERNAME"], 
+                 envConfig["DB_PASSWORD"], envConfig["DB_HOST"],
+                 envConfig["DB_PORT"])
+
+    BigDiscord.main(thisToken, config["Discord"]["Debug_Mode"].lower() == "true")
 
 
 main()

@@ -1,11 +1,3 @@
-[SQL]
-Host = 
-Port = 
-Name = 
-User = 
-Password = 
-
-
 [Discord]
 TOKEN = 
 Debug_Mode = 
