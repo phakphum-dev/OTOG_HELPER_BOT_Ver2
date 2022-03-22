@@ -85,13 +85,13 @@ async def on_message(mes):
     isAdmin = False
     if hasattr(mes.author, 'roles'):
         for r in mes.author.roles:
-            if str(r) == "VETERAN OTOGer":
+            if str(r) == "Admin OTOG":
                 isAdmin = True
 
     isAdminChan = False
     if hasattr(mes.channel, 'changed_roles'):
         for r in mes.channel.changed_roles:
-            if str(r) == "VETERAN OTOGer":
+            if str(r) == "Admin OTOG":
                 isAdminChan = True
 
     isAdmin = isAdmin and isAdminChan
