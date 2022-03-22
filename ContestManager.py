@@ -5,10 +5,7 @@ import time
 
 def timeParse(con: str):
     con = con[: con.find(".")] + "Z"
-    return time.mktime(time.strptime(con, "%Y-%m-%dT%H:%M:%SZ")) + 60 * 60 * 7
-
-def getTimeWithOffset():
-    return time.time() - 7 * 60 * 60 #HARD CODE -7 HR
+    return time.mktime(time.strptime(con, "%Y-%m-%dT%H:%M:%SZ")) 
 
 
 def verifyState():
@@ -16,11 +13,11 @@ def verifyState():
     # state -2 is 1 day
     # state -1 is 1 hour
     # state 0 is now
-    if getTimeWithOffset() > timeParse(dataBASS.contest["info"]["timeStart"]):
+    if time.time() > timeParse(dataBASS.contest["info"]["timeStart"]):
         state = 0
-    elif getTimeWithOffset() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60 * 60:
+    elif time.time() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60 * 60:
         state = -1
-    elif getTimeWithOffset() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60 * 60 * 24:
+    elif time.time() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60 * 60 * 24:
         state = -2
     else:
         state = -3
@@ -29,11 +26,11 @@ def verifyState():
 
 
 def reVerState():
-    if getTimeWithOffset() > timeParse(dataBASS.contest["info"]["timeStart"]):
+    if time.time() > timeParse(dataBASS.contest["info"]["timeStart"]):
         nState = 0
-    elif getTimeWithOffset() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60 * 60:
+    elif time.time() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60 * 60:
         nState = -1
-    elif getTimeWithOffset() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60 * 60 * 24:
+    elif time.time() > timeParse(dataBASS.contest["info"]["timeStart"]) - 60 * 60 * 24:
         nState = -2
     else:
         nState = -3
@@ -58,9 +55,9 @@ def timeState():
         timeStart = timeParse(dataBASS.contest["info"]["timeStart"])
         timeEnd = timeParse(dataBASS.contest["info"]["timeEnd"])
 
-        if getTimeWithOffset() < timeStart:
+        if time.time() < timeStart:
             return "NotStart"
-        elif getTimeWithOffset() < timeEnd:
+        elif time.time() < timeEnd:
             return "NotEnd"
         else:
             return "NoContest"
@@ -78,7 +75,7 @@ def reloading():
         else:
             timeStart = timeParse(otogCon["timeStart"])
             timeEnd = timeParse(otogCon["timeEnd"])
-        if getTimeWithOffset() > timeEnd:
+        if time.time() > timeEnd:
             dataBASS.contest = dict()
             dataBASS.saveFile()
         else:
