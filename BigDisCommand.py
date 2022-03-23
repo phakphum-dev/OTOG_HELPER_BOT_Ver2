@@ -4,10 +4,13 @@ import OTOG_API
 import util
 import dataBASS
 import ContestManager
+import voiceChatManager as vcMan
 from discord import Embed, Colour, File, Activity, Status, ActivityType, Game
 from os import path, remove
 import asyncio
 import time
+
+import random
 
 defaultName = "OTOG - One Tambon One Grader"
 
@@ -22,7 +25,7 @@ def parseCommand(content: str):
         return False
 
     for chunk in content[content.find("(") + 1 : content.find(")")].split(","):
-        args.append(chunk.strip())
+        args.append(chunk.strip().replace("@everyone", f"@everyon... ฮั่นแน่! ไม่ได้แดกกูหรอก!"))
 
     if len(content) > content.find(")") + 1:
         value = content[content.find(")") + 1 :].strip()
@@ -168,7 +171,9 @@ async def botStatus(client):
             await client.change_presence(status=botStatus, activity=botActivi)
         except:
             print("Warning... Can't change status")
-        await asyncio.sleep(5)
+
+
+        await asyncio.sleep(2)
 
 
 async def sayhelp(chan, isAdmin: bool = False):
@@ -197,11 +202,21 @@ async def sayhelp(chan, isAdmin: bool = False):
         value="เป็นการตรวจสอบว่าบอทในรุ่นปัจจุบันมีอะไรเปลี่ยนแปลงบ้าง",
         inline=False,
     )
-    em.add_field(
-        name=":musical_note:OtogRadio(<ชื่อเพลง>)", value="ขอเพลงได้ๆๆ", inline=False
-    )
 
     await chan.send(content=None, embed=em)
+
+    em = Embed(
+        title=":musical_note:คำสั่งหรับการเปิดเพลง:musical_note:",
+        description="คำสั่งสำหรับเล่นเพลง",
+        colour=Colour.from_rgb(255, 170, 100),
+    )
+    em.add_field(name=":play_pause:mPlay(<ชื่อเพลง>)", value="เล่นเพลง", inline=False)
+    em.add_field(name=":play_pause:mPause()", value="พักเพลง", inline=False)
+    em.add_field(name=":stop_button:mStop()", value="หยุดเพลง", inline=False)
+    em.add_field(name=":track_next:mSkip()", value="ข้ามเพลงปัจจุบัน", inline=False)
+
+    await chan.send(content=None, embed=em)
+
 
     em = Embed(
         title=":speech_balloon:คำสั่งคนเหงา:speech_balloon:",
