@@ -17,8 +17,7 @@ def formatInThai(thatTime:float)->str:
     return f"เวลา {tt.tm_hour:02d}:{tt.tm_min:02d}:{tt.tm_sec:02d} วัน{daysInThai[tt.tm_wday]}ที่ {tt.tm_mday} เดือน{monthsInThai[tt.tm_mon]} ปี {tt.tm_year+543}"
 
 def getNowTimeInThai()->str:
-    now = time.localtime()
-    return f"เวลา {now.tm_hour:02d}:{now.tm_min:02d}:{now.tm_sec:02d} วัน{daysInThai[now.tm_wday]}ที่ {now.tm_mday} เดือน{monthsInThai[now.tm_mon]} ปี {now.tm_year+543}"
+    return formatInThai(time.time())
 
 def nameWithPlace(name:str, place:int)->str:
     if place == 1:
