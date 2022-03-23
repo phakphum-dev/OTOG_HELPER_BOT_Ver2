@@ -155,7 +155,7 @@ async def on_message(mes):
             await cmd.sayThatChanel(mes, ENUM.GNG_GIVE)
             GNG.removeGNG(idPer)
         elif not isInt(thisCmd["args"][0].strip()):
-            await cmd.sayThatChanel(mes, f"{thisCmd['args'][0].strip()} ไม่น่าใช่ตัวเลขจำนวนเต็มน้าาาา")
+            await cmd.sayThatChanel(mes, f"{thisCmd['args'][0].strip().replace('@', '๑')} ไม่น่าใช่ตัวเลขจำนวนเต็มน้าาาา")
         else:
             gus = int(thisCmd["args"][0].strip())
             if gus <= 0 or gus > 100:
