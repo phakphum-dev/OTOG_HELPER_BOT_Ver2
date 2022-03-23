@@ -4,7 +4,6 @@ import OTOG_API
 import util
 import dataBASS
 import ContestManager
-import voiceChatManager as vcMan
 from discord import Embed, Colour, File, Activity, Status, ActivityType, Game
 from os import path, remove
 import asyncio
@@ -203,17 +202,8 @@ async def sayhelp(chan, isAdmin: bool = False):
         inline=False,
     )
 
-    await chan.send(content=None, embed=em)
-
-    em = Embed(
-        title=":musical_note:คำสั่งหรับการเปิดเพลง:musical_note:",
-        description="คำสั่งสำหรับเล่นเพลง",
-        colour=Colour.from_rgb(255, 170, 100),
-    )
-    em.add_field(name=":play_pause:mPlay(<ชื่อเพลง>)", value="เล่นเพลง", inline=False)
-    em.add_field(name=":play_pause:mPause()", value="พักเพลง", inline=False)
-    em.add_field(name=":stop_button:mStop()", value="หยุดเพลง", inline=False)
-    em.add_field(name=":track_next:mSkip()", value="ข้ามเพลงปัจจุบัน", inline=False)
+    em.add_field(
+        name=":musical_note:OtogRadio(<ชื่อเพลง>)", value="ขอเพลงได้ๆๆ", inline=False)
 
     await chan.send(content=None, embed=em)
 
