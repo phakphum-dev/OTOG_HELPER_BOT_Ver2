@@ -62,8 +62,8 @@ def pickOne(x:list):
 
 
 def isSleepTime():
-    now = time.localtime()
-    return 2 <= now.tm_hour <= 6
+    #? Not use
+    return False
 
 def messageToUniqueID(mes):
     mesID = mes.id
