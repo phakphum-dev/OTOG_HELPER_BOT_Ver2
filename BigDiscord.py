@@ -197,7 +197,7 @@ async def on_message(mes:discord.message.Message):
                     idPer, thisCmd["args"][0], thisCmd["value"])
                 await questionManager.reloadMessage(client, idQ)
             else:
-                if questionManager.crtQuestion(idPer) >= 5:
+                if questionManager.crtQuestion(idPer) >= 1:
                     await mes.author.send("เจ้าหมดโค้วต้าการถามแล้ว... รอก่อนนะ")
                 else:
                     mesIds = []
