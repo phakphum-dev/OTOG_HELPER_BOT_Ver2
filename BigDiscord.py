@@ -65,7 +65,7 @@ async def on_member_remove(member):
 
 
 @client.event
-async def on_message(mes):
+async def on_message(mes:discord.message.Message):
 
     if mes.content.strip().lower() == DEB+"help":
         await cmd.sayhelp(mes.channel)
@@ -115,13 +115,24 @@ async def on_message(mes):
     if thisCmd["command"] == (DEB + "contest"):
         await cmd.sayContestInfo(mes)
 
-    if thisCmd["command"] == (DEB + "otogradio"):
+    #? play music
+    if thisCmd["command"] == (DEB + "otogradio") or thisCmd["command"] == (DEB + "mPlay"):
         if len(thisCmd["args"]) < 1:
             await cmd.sayThatChanel(mes, "ไม่ใส่ชื่อเพลง ก็ไม่เปิดให้!!!")
         else:
-            await cmd.sayThatChanel(mes, "OK จัดให้ @author")
-            await cmd.sayThatChanel(mes, f":musical_note:playing... {thisCmd['args'][0]}")
-            await cmd.sayThatChanel(mes, f"||ล้อเล่น ไม่มีหรอก||")
+            #? Music Goes here
+            if mes.author.voice != None:
+                voice_channel = mes.author.voice.channel
+                await cmd.sayThatChanel(mes, "กำลังหาเพลง...")
+                #res = await vcMan.addSong(mes.guild.id, voice_channel, thisCmd["args"][0])
+                # if res == None:
+                #     await cmd.sayThatChanel(mes, ":x:หาเพลงไม่เจอง่ะ")
+                #     return
+                
+                await cmd.sayThatChanel(mes, f"||Bruh||")
+            else:
+                await cmd.sayThatChanel(mes, "หาแนลไม่เจอ ไม่เปิด!!!")
+            
 
     if thisCmd["command"] == (DEB + "hello"):
         thisHello = ENUM.HELLO_TEXT[random.randint(
@@ -144,23 +155,23 @@ async def on_message(mes):
     if thisCmd["command"] == (DEB + "guess"):
         idPer = mes.author.id
 
-        if GNG.remain(idPer) != -1:
-            await mes.delete()
 
         if GNG.remain(idPer) == -1:
             await cmd.sayThatChanel(mes, "ฮั่นแน่ อยากเล่นด้วยละสิ @author\nเวลาจะเล่นให้ใช้คำสั่ง `guess_num()` ก่อนเด้ออ")
         elif len(thisCmd["args"]) < 1:
             await cmd.sayThatChanel(mes, "จะทายความว่างเปล่าหรอ... ไม่น่าใช่น้าาาา")
         elif thisCmd["args"][0].strip() == "*":
+            await mes.delete()
             await cmd.sayThatChanel(mes, ENUM.GNG_GIVE)
             GNG.removeGNG(idPer)
         elif not isInt(thisCmd["args"][0].strip()):
-            await cmd.sayThatChanel(mes, f"{thisCmd['args'][0].strip().replace('@', '๑')} ไม่น่าใช่ตัวเลขจำนวนเต็มน้าาาา")
+            await cmd.sayThatChanel(mes, f"ไม่น่าใช่ตัวเลขจำนวนเต็มน้าาาา")
         else:
             gus = int(thisCmd["args"][0].strip())
             if gus <= 0 or gus > 100:
                 await cmd.sayThatChanel(mes, "1 ถึง 100...\n๑ ถึง ๑๐๐...\n***หนึ่งถึงร้อยยยยย!!!!***")
             else:
+                await mes.delete()
                 result = GNG.guess(idPer, gus)
                 await cmd.sayThatChanel(mes, result)
 
