@@ -56,16 +56,16 @@ async def on_member_join(member):
         await guild.system_channel.send(to_send)
 
 
-@client.event
-async def on_member_remove(member):
-    guild = member.guild
-    if guild.system_channel is not None:
-        to_send = 'ลาก่อย {0.mention}!'.format(member)
-        await guild.system_channel.send(to_send)
+# @client.event
+# async def on_member_remove(member):
+#     guild = member.guild
+#     if guild.system_channel is not None:
+#         to_send = 'ลาก่อย {0.mention}!'.format(member)
+#         await guild.system_channel.send(to_send)
 
 
 @client.event
-async def on_message(mes:discord.message.Message):
+async def on_message(mes: discord.message.Message):
 
     if mes.content.strip().lower() == DEB+"help":
         await cmd.sayhelp(mes.channel)
@@ -115,24 +115,23 @@ async def on_message(mes:discord.message.Message):
     if thisCmd["command"] == (DEB + "contest"):
         await cmd.sayContestInfo(mes)
 
-    #? play music
+    # ? play music
     if thisCmd["command"] == (DEB + "otogradio") or thisCmd["command"] == (DEB + "mPlay"):
         if len(thisCmd["args"]) < 1:
             await cmd.sayThatChanel(mes, "ไม่ใส่ชื่อเพลง ก็ไม่เปิดให้!!!")
         else:
-            #? Music Goes here
+            # ? Music Goes here
             if mes.author.voice != None:
                 voice_channel = mes.author.voice.channel
                 await cmd.sayThatChanel(mes, "กำลังหาเพลง...")
-                #res = await vcMan.addSong(mes.guild.id, voice_channel, thisCmd["args"][0])
+                # res = await vcMan.addSong(mes.guild.id, voice_channel, thisCmd["args"][0])
                 # if res == None:
                 #     await cmd.sayThatChanel(mes, ":x:หาเพลงไม่เจอง่ะ")
                 #     return
-                
+
                 await cmd.sayThatChanel(mes, f"||Bruh||")
             else:
                 await cmd.sayThatChanel(mes, "หาแนลไม่เจอ ไม่เปิด!!!")
-            
 
     if thisCmd["command"] == (DEB + "hello"):
         thisHello = ENUM.HELLO_TEXT[random.randint(
@@ -154,7 +153,6 @@ async def on_message(mes:discord.message.Message):
 
     if thisCmd["command"] == (DEB + "guess"):
         idPer = mes.author.id
-
 
         if GNG.remain(idPer) == -1:
             await cmd.sayThatChanel(mes, "ฮั่นแน่ อยากเล่นด้วยละสิ @author\nเวลาจะเล่นให้ใช้คำสั่ง `guess_num()` ก่อนเด้ออ")
