@@ -107,9 +107,13 @@ def contestNow():
         try:
             data = response.json()
         except:
-            return dict()
+            return -1
+        
+        if data["currentContest"] is None:
+            return -1
+        
         thisContest = dict()
-        for k in data:
+        for k in data["currentContest"]:
             if k != "problems":
                 thisContest[k] = data[k]
         return thisContest
