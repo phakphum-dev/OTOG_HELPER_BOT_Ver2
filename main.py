@@ -2,6 +2,7 @@ import BigDiscord
 import ENUM
 import dataBassSQL as sql
 import configparser as cfg
+import OTOG_API as otog
 from os import path
 
 
@@ -33,6 +34,8 @@ def main():
     sql.initData(envConfig["DB_DATABASE"], envConfig["DB_USERNAME"], 
                  envConfig["DB_PASSWORD"], envConfig["DB_HOST"],
                  envConfig["DB_PORT"])
+
+    otog.init(envConfig["OTOG_HOST"], envConfig["OTOG_API_HOST"])
 
     BigDiscord.main(thisToken, config["Discord"]["Debug_Mode"].lower() == "true")
 
