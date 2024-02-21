@@ -1,5 +1,6 @@
 import BigDiscord
 import ENUM
+import env
 import dataBassSQL as sql
 import configparser as cfg
 import OTOG_API as otog
@@ -18,26 +19,13 @@ def main():
         print("BigConfig.ini not found :(")
         exit(1)
 
-    thisToken = config["Discord"]["TOKEN"]
 
-    envConfig = dict()
-    if path.exists(path.join(ENUM.PATH, ".env")):
-        print(f"Read env!")
-        with open(".env","r") as f:
-            for line in f:
-                if line.strip()[0] != "#" and '=' in line:
-                    envConfig[line.split('=')[0]] = ("=".join(line.split('=')[1:])).strip()
-    else:
-        print(".env not found :(")
-        exit(1)
-
-    sql.initData(envConfig["DB_DATABASE"], envConfig["DB_USERNAME"], 
-                 envConfig["DB_PASSWORD"], envConfig["DB_HOST"],
-                 envConfig["DB_PORT"])
-
-    otog.init(envConfig["OTOG_HOST"], envConfig["OTOG_API_HOST"])
-
-    BigDiscord.main(thisToken, config["Discord"]["Debug_Mode"].lower() == "true")
+    env.initEnv()
+    sql.initData(env.get().DB_DATABASE, env.get().DB_USERNAME, 
+                 env.get().DB_PASSWORD, env.get().DB_HOST,
+                 env.get().DB_PORT)
+    otog.init(env.get().OTOG_HOST, env.get().OTOG_API_HOST)
+    BigDiscord.main(env.get().DISCORD_BOT_TOKEN, env.get().DISCORD_DEBUG.lower() == "true")
 
 
 main()

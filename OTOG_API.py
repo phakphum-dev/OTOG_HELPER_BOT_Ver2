@@ -5,7 +5,7 @@ _otog_host = ""
 _otog_api_host = ""
 
 def init(host: str, api_host: str):
-    global _otog_host, _otog_api_host, _is_init
+    global _otog_host, _otog_api_host
     _otog_host = host
     _otog_api_host = api_host
 
