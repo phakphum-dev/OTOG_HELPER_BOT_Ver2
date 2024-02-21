@@ -8,18 +8,6 @@ from os import path
 
 
 def main():
-
-    thisToken = 0
-
-    if path.exists(path.join(ENUM.PATH, "BigConfig.ini")):
-        config = cfg.ConfigParser()
-        config.read(path.join(ENUM.PATH, "BigConfig.ini"))
-        print(f"Read config!")
-    else:
-        print("BigConfig.ini not found :(")
-        exit(1)
-
-
     env.initEnv()
     sql.initData(env.get().DB_DATABASE, env.get().DB_USERNAME, 
                  env.get().DB_PASSWORD, env.get().DB_HOST,
