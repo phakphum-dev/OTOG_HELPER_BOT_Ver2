@@ -123,7 +123,7 @@ def contestNow():
         thisContest = dict()
         for k in data["currentContest"]:
             if k != "problems":
-                thisContest[k] = data[k]
+                thisContest[k] = data["currentContest"][k]
         return thisContest
 
 
